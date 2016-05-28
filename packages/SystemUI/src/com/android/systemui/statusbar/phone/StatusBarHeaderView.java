@@ -1612,14 +1612,11 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     }
 
     private void setQSHeaderAlpha() {
-        if (Settings.System.getInt(mContext.getContentResolver(),
-                    Settings.System.QS_TRANSPARENT_HEADER, 255) != 255) {
-            if (mHeaderView != null) {
-                 mHeaderView.getBackground().setAlpha(mQSHeaderAlpha);
-            }
-            if (mBackgroundImage != null) {
-                mBackgroundImage.setAlpha(mQSHeaderAlpha);
-            }
+    	if (mHeaderView != null) {
+        	mHeaderView.getBackground().setAlpha(mQSHeaderAlpha);
+        }
+        if (mBackgroundImage != null) {
+        mBackgroundImage.setAlpha(mQSHeaderAlpha);
         }
     }
         

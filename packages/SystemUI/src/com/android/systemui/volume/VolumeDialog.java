@@ -1174,12 +1174,9 @@ public class VolumeDialog {
 
     private void setVolumeAlpha() {
         mVolumeDialogAlpha = Settings.System.getInt(mContext.getContentResolver(),
-                    Settings.System.TRANSPARENT_VOLUME_DIALOG, 255);
-        if (Settings.System.getInt(mContext.getContentResolver(),
-                    Settings.System.TRANSPARENT_VOLUME_DIALOG, 255) != 255) {
-            if (mDialogView != null) {
-                mDialogView.getBackground().setAlpha(mVolumeDialogAlpha);
-            }
+        			Settings.System.TRANSPARENT_VOLUME_DIALOG, 255);
+        if (mDialogView != null) {
+        	mDialogView.getBackground().setAlpha(mVolumeDialogAlpha);
         }
     }
 }
