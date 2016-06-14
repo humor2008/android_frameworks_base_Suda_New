@@ -1483,8 +1483,13 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
                 Settings.System.HEADER_DETAIL_FONT_STYLE, FONT_NORMAL,
                 UserHandle.USER_CURRENT);
             mShowHeadsUpButton = Settings.System.getInt(getContext().getContentResolver(),
-                Settings.System.HEADS_UP_SHOW_STATUS_BUTTON, 0) == 1;
-
+                Settings.System.HEADS_UP_SHOW_STATUS_BUTTON, 0) == 1;          
+            headerShadow = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.STATUS_BAR_CUSTOM_HEADER_SHADOW, 0,
+                    UserHandle.USER_CURRENT);
+            customHeader = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.STATUS_BAR_CUSTOM_HEADER, 0,
+                    UserHandle.USER_CURRENT);
 	    setStatusBarHeaderFontStyle	(mStatusBarHeaderFontStyle);
 	    setStatusBarWeatherFontStyle(mStatusBarHeaderWeatherFont);
 	    setStatusBarClockFontStyle(mStatusBarHeaderClockFont);
@@ -1500,19 +1505,10 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
 	    hidepanelItems();
 	    setHeaderColor();
 	    updateEverything();
-            updateHeadsUpState();
-            updateStatusBarButtonsState();
-
-            updateVisibilities();
-            requestCaptureValues();
-
-            headerShadow = Settings.System.getIntForUser(mContext.getContentResolver(),
-                    Settings.System.STATUS_BAR_CUSTOM_HEADER_SHADOW, 0,
-                    UserHandle.USER_CURRENT);
-
-            customHeader = Settings.System.getIntForUser(mContext.getContentResolver(),
-                    Settings.System.STATUS_BAR_CUSTOM_HEADER, 0,
-                    UserHandle.USER_CURRENT);
+        updateHeadsUpState();
+        updateStatusBarButtonsState();
+        updateVisibilities();
+        requestCaptureValues();
         }
     }
 
