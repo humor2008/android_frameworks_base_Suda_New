@@ -760,7 +760,16 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System. SHOW_DARK_ICONS),
                     false, this, UserHandle.USER_ALL);
-		    update();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_CUSTOM_HEADER_TEXT_SHADOW), false, this,
+                    UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_CUSTOM_HEADER_TEXT_SHADOW_COLOR), false, this,
+                    UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+		    Settings.System.QS_STROKE), false, this,
+		    UserHandle.USER_ALL);
+            update();
         }
 
 	@Override
@@ -793,14 +802,14 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 		mContext.getContentResolver(),
 		Settings.System.SHOW_FOURG,
 		0, UserHandle.USER_CURRENT) == 1;
-		DontStressOnRecreate();
+		mNetworkController.onConfigurationChanged();
 		} else if (uri.equals(Settings.System.getUriFor(
 		Settings.System.SHOW_THREEG))) {
 		mShow3G = Settings.System.getIntForUser(
 		mContext.getContentResolver(),
 		Settings.System.SHOW_THREEG,
 		0, UserHandle.USER_CURRENT) == 1;
-		DontStressOnRecreate();
+		mNetworkController.onConfigurationChanged();
 		} else if (uri.equals(Settings.System.getUriFor(
 		Settings.System.NOTIFICATION_DRAWER_CLEAR_ALL_ICON_COLOR))) {
 		UpdateNotifDrawerClearAllIconColor();
@@ -880,9 +889,18 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 		} else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.SHOW_DARK_ICONS))) {
                 DontStressOnRecreate();
-		} 
+		} else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.QS_STROKE))) {
+                    int mQSStroke = Settings.System.getIntForUser(
+                            mContext.getContentResolver(),
+                            Settings.System.QS_STROKE, 1,
+                            UserHandle.USER_CURRENT);
+                    if (mQSStroke == 0) {
+                    DontStressOnRecreate();
+                    }
+            }
          update();
-        }
+	}
 
         @Override
         protected void unobserve() {
@@ -1768,9 +1786,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 mDockBatteryController = new DockBatteryController(mContext, mHandler);
             }
 	}
-        if (mNetworkController == null) {
-            mNetworkController = new NetworkControllerImpl(mContext, mHandlerThread.getLooper());
-        }
+	if (mNetworkController == null) {
+	    mNetworkController = new NetworkControllerImpl(mContext, mHandlerThread.getLooper());
+	}
         if (mHotspotController == null) {
             mHotspotController = new HotspotControllerImpl(mContext);
         }
@@ -5582,6 +5600,10 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
     boolean isSecure() {
         return mStatusBarKeyguardViewManager != null && mStatusBarKeyguardViewManager.isSecure();
+    }
+
+    public boolean isKeyguardInputRestricted() {
+        return mStatusBarKeyguardViewManager != null && mStatusBarKeyguardViewManager.isInputRestricted();
     }
 
     public long calculateGoingToFullShadeDelay() {
